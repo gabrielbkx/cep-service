@@ -7,7 +7,6 @@ import com.cep_service.cep_service.domain.cep.DadosatualizarCep;
 import com.cep_service.cep_service.exception.CepExistenteException;
 import com.cep_service.cep_service.exception.CepNaoExistenteException;
 import com.cep_service.cep_service.repositpry.CepRepository;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
 
