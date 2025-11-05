@@ -34,4 +34,11 @@ public class CepController {
         var cepAtualizado = cepService.atualizar(dados);
         return ResponseEntity.ok(cepAtualizado);
     }
+
+    @Transactional
+    @DeleteMapping({"/{id}"})
+    public ResponseEntity<Object> deletarCep(@PathVariable Long id) {
+        cepService.deletar(id);
+        return ResponseEntity.noContent().build();
+    }
 }

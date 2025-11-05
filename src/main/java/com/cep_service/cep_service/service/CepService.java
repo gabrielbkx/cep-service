@@ -21,8 +21,11 @@ public class CepService {
 
     public DadosDetalharCep salvar(DadosSalvarCep dados) {
 
-       verificarExistenciaCep(dados.numeroCep());// verifica se a o cep ja existe no banco de dados, caso sim
-        // retorna uma exceção
+        // Verifica se o CEP já existe no sistema, caso exista lança uma exceção peresonalizada
+        if (cepRepository.existsByNumeroCep(dados.numeroCep())) {
+            throw new CepExistenteException("O CEP informado já existe no sistema.");
+        }
+
         Cep cep = new Cep(dados);
         var cepSalvo = cepRepository.save(cep);
         return new DadosDetalharCep(cepSalvo);
@@ -43,11 +46,14 @@ public class CepService {
             }
     }
 
-    // verifica se o cep existe no banco de dados
-    public void verificarExistenciaCep(String numeroCep) {
+    public void deletar(Long id) {
 
-        if (cepRepository.existsByNumeroCep(numeroCep)) {
-            throw new CepExistenteException("O CEP informado já existe no sistema.");
+        if (cepRepository.existsById(id)) {
+
+            cepRepository.deleteById(id);
+
+        } else {
+            throw new CepNaoExistenteException("O CEP informado não existe no sistema.");
         }
     }
 }
