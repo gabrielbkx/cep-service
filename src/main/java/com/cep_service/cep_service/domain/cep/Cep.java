@@ -1,6 +1,7 @@
 package com.cep_service.cep_service.domain.cep;
 
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import lombok.*;
 
 @Entity
@@ -31,4 +32,17 @@ public class Cep {
         this.logradouro = cep.logradouro();
         this.cidade = cep.cidade();
     }
+
+    public void atualizarInformacoes(@Valid DadosatualizarCep dados) {
+        if (dados.numeroCep()!= null) {
+            this.numeroCep = dados.numeroCep();
+        }
+        if (dados.logradouro() != null) {
+            this.logradouro = dados.logradouro();
+    }
+        if (dados.cidade() != null) {
+            this.cidade = dados.cidade();
+        }
+    }
+
 }
