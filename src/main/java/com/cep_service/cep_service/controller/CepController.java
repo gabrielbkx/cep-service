@@ -24,13 +24,13 @@ public class CepController {
     @Transactional
     public ResponseEntity<DadosDetalharCep> salvarCep(@RequestBody @Valid DadosSalvarCep dados, UriComponentsBuilder uriBuilder) {
         var cep = cepService.salvar(dados);
-        var uri = uriBuilder.path("/ceps/{id}").buildAndExpand(cep.id()).toUri();
+        var uri = uriBuilder.path("/cep/{id}").buildAndExpand(cep.id()).toUri();
         return ResponseEntity.created(uri).body(cep);
     }
 
     @Transactional
     @PutMapping
-    public ResponseEntity<DadosDetalharCep> atualizar(@RequestBody @Valid DadosatualizarCep dados,@RequestParam Long id) {
+    public ResponseEntity<DadosDetalharCep> atualizar(@RequestBody @Valid DadosatualizarCep dados) {
         var cepAtualizado = cepService.atualizar(dados);
         return ResponseEntity.ok(cepAtualizado);
     }

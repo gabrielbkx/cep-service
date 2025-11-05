@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CepRepository extends JpaRepository<Cep, Long> {
     boolean existsByNumeroCep(String numeroCep);
+    boolean existsById(Long id);
 }
