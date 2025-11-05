@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/cep")
 public class CepController {
@@ -40,5 +42,23 @@ public class CepController {
     public ResponseEntity<Object> deletarCep(@PathVariable Long id) {
         cepService.deletar(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/numeroCep/{numeroCep}")
+    public ResponseEntity<DadosDetalharCep> buscarPorCep(@PathVariable String numeroCep) {
+        var cep = cepService.buscarPorCep(numeroCep);
+        return ResponseEntity.ok(cep);
+    }
+
+    @GetMapping("/logradouro/{logradouro}")
+    public ResponseEntity<List<DadosDetalharCep>> buscarPorLogradouro(@PathVariable String logradouro) {
+        var ceps = cepService.buscarPorLogradouro(logradouro);
+        return ResponseEntity.ok(ceps);
+    }
+
+    @GetMapping("/cidade/{cidade}")
+    public ResponseEntity<List<DadosDetalharCep>> buscarPorCidade(@PathVariable String cidade) {
+        var ceps = cepService.buscarPorCidade(cidade);
+        return ResponseEntity.ok(ceps);
     }
 }
