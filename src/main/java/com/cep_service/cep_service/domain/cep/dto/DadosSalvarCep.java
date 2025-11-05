@@ -1,4 +1,4 @@
-package com.cep_service.cep_service.domain.cep;
+package com.cep_service.cep_service.domain.cep.dto;
 
 
 import jakarta.validation.constraints.Pattern;

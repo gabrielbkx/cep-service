@@ -1,9 +1,9 @@
 package com.cep_service.cep_service.service;
 
 import com.cep_service.cep_service.domain.cep.Cep;
-import com.cep_service.cep_service.domain.cep.DadosDetalharCep;
-import com.cep_service.cep_service.domain.cep.DadosSalvarCep;
-import com.cep_service.cep_service.domain.cep.DadosatualizarCep;
+import com.cep_service.cep_service.domain.cep.dto.DadosDetalharCep;
+import com.cep_service.cep_service.domain.cep.dto.DadosSalvarCep;
+import com.cep_service.cep_service.domain.cep.dto.DadosatualizarCep;
 import com.cep_service.cep_service.exception.CepExistenteException;
 import com.cep_service.cep_service.exception.CepNaoExistenteException;
 import com.cep_service.cep_service.repositpry.CepRepository;

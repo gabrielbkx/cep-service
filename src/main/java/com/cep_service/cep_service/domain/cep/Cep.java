@@ -1,5 +1,7 @@
 package com.cep_service.cep_service.domain.cep;
 
+import com.cep_service.cep_service.domain.cep.dto.DadosDetalharCep;
+import com.cep_service.cep_service.domain.cep.dto.DadosSalvarCep;
 import jakarta.persistence.*;
 import lombok.*;
 

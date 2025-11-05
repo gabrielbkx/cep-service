@@ -1,4 +1,4 @@
-package com.cep_service.cep_service.infra.security;
+package com.cep_service.cep_service.service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
