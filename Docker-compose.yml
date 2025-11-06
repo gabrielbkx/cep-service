@@ -1,0 +1,39 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres_cep
+    environment:
+      POSTGRES_DB: cep_db
+      POSTGRES_USER: dev
+      POSTGRES_PASSWORD: oti_software
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - cep-network
+
+  cep-service:
+    build: .
+    container_name: cep_api
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/cep_db
+      SPRING_DATASOURCE_USERNAME: dev
+      SPRING_DATASOURCE_PASSWORD: oti_software
+      SPRING_JPA_HIBERNATE_DDL_AUTO: none
+      SPRING_PROFILES_ACTIVE: prod
+    depends_on:
+      - postgres
+    networks:
+      - cep-network
+
+volumes:
+  postgres_data:
+
+networks:
+  cep-network:
+    driver: bridge
