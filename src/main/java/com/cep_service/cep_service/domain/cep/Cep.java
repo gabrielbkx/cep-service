@@ -10,10 +10,11 @@ import lombok.*;
 @EqualsAndHashCode(of = "id")
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Setter
 @Getter
 public class Cep {
+
+    // vou deixar o jpa criar as colunas conforme escrito nos atributos
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
