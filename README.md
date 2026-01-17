@@ -195,26 +195,32 @@ CREATE TABLE ceps (
     logradouro VARCHAR(255) NOT NULL,
     cidade VARCHAR(100) NOT NULL
 );
-🐳 Executando Localmente (Docker)
+
+## 🐳 Executando Localmente (Docker)
+
 Caso queira rodar o projeto em sua máquina local em vez de acessar a versão na nuvem:
 
-1️⃣ Build e Subida dos Containers
-
-Bash
+### 1️⃣ Build e Subida dos Containers
+```bash
 docker compose up --build -d
-2️⃣ Acesso Local
 
-API: http://localhost:8080
+## 2️⃣ Acesso Local
 
-Swagger: http://localhost:8080/swagger-ui.html
+- **API: http://localhost:8080
 
-Banco: localhost:5432
+- **Swagger: http://localhost:8080/swagger-ui.html
 
-3️⃣ Parar a execução
+- **Banco: localhost:5432`
 
-Bash
-docker compose down
+## 3️⃣ Parar a execução
+docker compose down´
+
 🧑‍💻 Autor
-Gabriel de Oliveira Ferreira 💼 Desenvolvedor Backend Java 📧 oliveirafrerreira97@hotmail.com 🌐 LinkedIn
+Gabriel de Oliveira Ferreira 💼 Desenvolvedor Backend Java
 
-🏁 Status do Projeto: ✅ Concluído e Implantado — API funcional, documentada, dockerizada e hospedada na AWS.
+📧 oliveirafrerreira97@hotmail.com
+
+🌐 LinkedIn
+
+🏁 Status do Projeto
+✅ Em Desenvolvimento — API funcional, documentada, dockerizada e hospedada na AWS.
