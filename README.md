@@ -5,7 +5,7 @@
 ![Docker](https://img.shields.io/badge/Docker-Compose-blue)
 ![AWS](https://img.shields.io/badge/Deploy-AWS_EC2-232F3E)
 ![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub_Actions-2088FF)
-![Status](https://img.shields.io/github/actions/workflow/status/SEU_USUARIO/SEU_REPOSITORIO/deploy.yml?label=Build%20%26%20Deploy)
+![Status](https://img.shields.io/github/actions/workflow/status/gabrielbkx/cep-service/deploy.yml?label=Build%20%26%20Deploy)
 
 ## 🧠 Descrição
 
