@@ -1,0 +1,41 @@
+name: Deploy Back-end no serviço EC2 da AWS
+
+on:
+  # Gatilho: roda a cada push na branch main
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout do código
+      - name: Checkout do código-fonte
+        uses: actions/checkout@v4
+
+      # 2. Configuração do Java
+      - name: Configurar o Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      # 3. Build com Maven
+      - name: Compilar com Maven
+        run: ./mvnw clean package
+
+      # 4. Deploy via SSH
+      - name: Deploy na AWS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_KEY }}
+          script: |
+            cd cep-service
+            git pull origin main
+            ./mvnw clean package -DskipTests
+            sudo docker-compose down
+            sudo docker-compose up --build -d
