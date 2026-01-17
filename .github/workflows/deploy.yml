@@ -24,7 +24,9 @@ jobs:
 
       # 3. Build com Maven
       - name: Compilar com Maven
-        run: ./mvnw clean package
+        run: |
+          chmod +x mvnw
+          ./mvnw clean package
 
       # 4. Deploy via SSH
       - name: Deploy na AWS
