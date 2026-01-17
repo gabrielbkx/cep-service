@@ -1,39 +1,49 @@
-version: '3.9'
 
-services:
-  postgres:
-    image: postgres:15
-    container_name: postgres_cep
-    environment:
-      POSTGRES_DB: cep_db
-      POSTGRES_USER: dev
-      POSTGRES_PASSWORD: oti_software
-    ports:
-      - "5432:5432"
+    version: '3.9'
+
+    services:
+      postgres:
+        image: postgres:15
+        container_name: postgres_cep
+        environment:
+
+          # Lê do .env
+          POSTGRES_DB: ${DB_NAME}
+          POSTGRES_USER: ${DB_USER}
+          POSTGRES_PASSWORD: ${DB_PASSWORD}
+          # Lê do .env
+
+        ports:
+          - "5432:5432"
+        volumes:
+          - postgres_data:/var/lib/postgresql/data
+        networks:
+          - cep-network
+        restart: always # Se o servidor reiniciar, o container também reinicia
+
+      cep-service:
+        build: .
+        container_name: cep_api
+        ports:
+          - "${APP_PORT}:8080" # Porta externa variável : Porta interna fixa
+        environment:
+          # Monta a URL usando o nome do banco do .env
+          SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${DB_NAME}
+          SPRING_DATASOURCE_USERNAME: ${DB_USER}
+          SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+
+          # Configurações do Spring
+          SPRING_JPA_HIBERNATE_DDL_AUTO: ${DDL_AUTO}
+          SPRING_PROFILES_ACTIVE: ${APP_PROFILE}
+        depends_on:
+          - postgres
+        networks:
+          - cep-network
+        restart: always
+
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      postgres_data:
+
     networks:
-      - cep-network
-
-  cep-service:
-    build: .
-    container_name: cep_api
-    ports:
-      - "8080:8080"
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/cep_db
-      SPRING_DATASOURCE_USERNAME: dev
-      SPRING_DATASOURCE_PASSWORD: oti_software
-      SPRING_JPA_HIBERNATE_DDL_AUTO: none
-      SPRING_PROFILES_ACTIVE: prod
-    depends_on:
-      - postgres
-    networks:
-      - cep-network
-
-volumes:
-  postgres_data:
-
-networks:
-  cep-network:
-    driver: bridge
+      cep-network:
+        driver: bridge
