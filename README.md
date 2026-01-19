@@ -64,7 +64,7 @@ A API está documentada e pode ser testada diretamente pelo navegador.
 | `DELETE`| `/cep/{id}` | Remove um registo de CEP |
 
 
-## 🐳 Executar Localmente (Opcional)
+## 🐳 Executar Localmente 
 
 Caso queira rodar o projeto na sua máquina local em vez de aceder à versão na nuvem:
 
