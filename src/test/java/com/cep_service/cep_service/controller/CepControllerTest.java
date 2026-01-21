@@ -16,26 +16,26 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(CepController.class) // 1. Foca apenas neste Controller
+@WebMvcTest(CepController.class)
 class CepControllerTest {
 
     @Autowired
-    private MockMvc mockMvc; // O Robô piloto
+    private MockMvc mockMvc;
 
     @MockitoBean
-    private CepService cepService; // O Motor simulado
+    private CepService cepService;
 
     @Test
     void deveRetornarSucessoQuandoCepExiste() throws Exception {
-        // 1. Arrange
+
         String cepSolicitado = "28070077";
         Cep cepFalso = new Cep(cepSolicitado, "Rua Teste", "Campos");
 
-        // CORREÇÃO: Retornando o DTO em vez da entidade pura
+
         when(cepService.buscarPorCep(cepSolicitado))
                 .thenReturn(new DadosDetalharCep(cepFalso));
 
-        // 2. & 3. Act & Assert
+
         mockMvc.perform(get("/cep/numeroCep/{numeroCep}", cepSolicitado)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -45,15 +45,13 @@ class CepControllerTest {
 
     @Test
     void deveRetornarErroQuandoServiceFalha() throws Exception {
-        // 1. Arrange
-        // Simulamos que o Service vai explodir com aquele erro que você viu antes
+
         when(cepService.buscarPorCep(anyString())).thenThrow(new RuntimeException("Erro interno"));
 
-        // 2. & 3. Act & Assert
+
         mockMvc.perform(get("/cep/00000000")
                         .contentType(MediaType.APPLICATION_JSON))
-                // Aqui esperamos o status que sua API retorna no erro (500 ou 404)
-                // Ajuste conforme o seu ExceptionHandler
+
                 .andExpect(status().isInternalServerError());
     }
 }
