@@ -23,11 +23,13 @@ public class Cep {
     private String logradouro;
     private String cidade;
 
+
     public Cep(DadosSalvarCep dados) {
         this.numeroCep = dados.numeroCep();
         this.logradouro = dados.logradouro();
         this.cidade = dados.cidade();
     }
+
 
     public Cep(DadosDetalharCep cep) {
         this.id = cep.id();
@@ -36,4 +38,9 @@ public class Cep {
         this.cidade = cep.cidade();
     }
 
+    public Cep(String numeroCep, String Logradouro, String Cidade) {
+        this.numeroCep = numeroCep;
+        this.logradouro = Logradouro;
+        this.cidade = Cidade;
+    }
 }
