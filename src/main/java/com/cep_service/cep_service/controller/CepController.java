@@ -3,7 +3,7 @@ package com.cep_service.cep_service.controller;
 import com.cep_service.cep_service.domain.cep.dto.DadosatualizarCep;
 import com.cep_service.cep_service.domain.cep.dto.DadosDetalharCep;
 import com.cep_service.cep_service.domain.cep.dto.DadosSalvarCep;
-import com.cep_service.cep_service.service.CepService;
+import com.cep_service.cep_service.domain.cep.CepService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;

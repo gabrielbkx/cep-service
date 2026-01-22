@@ -1,7 +1,7 @@
 package com.cep_service.cep_service.repository;
 
 import com.cep_service.cep_service.domain.cep.Cep;
-import com.cep_service.cep_service.repositpry.CepRepository;
+import com.cep_service.cep_service.domain.cep.CepRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;

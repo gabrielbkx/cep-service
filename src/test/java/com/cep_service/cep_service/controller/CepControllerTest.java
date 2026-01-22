@@ -3,7 +3,7 @@ package com.cep_service.cep_service.controller;
 
 import com.cep_service.cep_service.domain.cep.Cep;
 import com.cep_service.cep_service.domain.cep.dto.DadosDetalharCep;
-import com.cep_service.cep_service.service.CepService;
+import com.cep_service.cep_service.domain.cep.CepService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;

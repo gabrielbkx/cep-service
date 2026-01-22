@@ -1,12 +1,10 @@
-package com.cep_service.cep_service.service;
+package com.cep_service.cep_service.domain.cep;
 
-import com.cep_service.cep_service.domain.cep.Cep;
 import com.cep_service.cep_service.domain.cep.dto.DadosDetalharCep;
 import com.cep_service.cep_service.domain.cep.dto.DadosSalvarCep;
 import com.cep_service.cep_service.domain.cep.dto.DadosatualizarCep;
 import com.cep_service.cep_service.exception.CepExistenteException;
 import com.cep_service.cep_service.exception.CepNaoExistenteException;
-import com.cep_service.cep_service.repositpry.CepRepository;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
 
