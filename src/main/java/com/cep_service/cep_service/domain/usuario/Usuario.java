@@ -1,12 +1,17 @@
 package com.cep_service.cep_service.domain.usuario;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "usuarios")
 public class Usuario implements UserDetails {
@@ -15,8 +20,13 @@ public class Usuario implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String usuario;
-    private String senha;
     private String email;
+    private String senha;
+    private Instant dataCadastro = Instant.now();
+
+    public Usuario(String usuario, String email, String encode) {
+    }
+
 
 
     @Override

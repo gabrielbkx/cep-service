@@ -22,4 +22,7 @@ public class AutenticacaoService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário ou Email não encontrad" + usuario));
         // criar uma exceção personalizada depois
     }
+
+
+
 }
