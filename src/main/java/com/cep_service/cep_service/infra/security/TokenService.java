@@ -2,6 +2,7 @@ package com.cep_service.cep_service.infra.security;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.cep_service.cep_service.domain.usuario.Usuario;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -25,5 +26,18 @@ public class TokenService {
                 .withSubject(usuario.getUsuario()) // Dono do token
                 .withExpiresAt(expiracaoToken) // Tempo de expiração do token (1 hora)
                 .sign(algorithm);  // Assinatura do token
+    }
+
+    public String validarToken(String tokenJWT) {
+        try {
+            var algoritmo = Algorithm.HMAC256(secret);
+            return JWT.require(algoritmo)
+                    .withIssuer("cep-service") // Use o mesmo issuer da geração!
+                    .build()
+                    .verify(tokenJWT)
+                    .getSubject();
+        } catch (JWTVerificationException exception) {
+            throw new RuntimeException("Token JWT inválido ou expirado!");
+        }
     }
 }

@@ -2,6 +2,7 @@ package com.cep_service.cep_service.domain.usuario;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -14,6 +15,7 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "usuarios")
+@NoArgsConstructor
 public class Usuario implements UserDetails {
 
     @Id
@@ -24,9 +26,11 @@ public class Usuario implements UserDetails {
     private String senha;
     private Instant dataCadastro = Instant.now();
 
-    public Usuario(String usuario, String email, String encode) {
+    public Usuario(String usuario, String email, String senha) {
+        this.usuario = usuario;
+        this.email = email;
+        this.senha = senha;
     }
-
 
 
     @Override

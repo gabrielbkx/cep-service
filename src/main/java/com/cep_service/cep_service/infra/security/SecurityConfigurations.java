@@ -21,10 +21,13 @@ public class SecurityConfigurations {
         return http .csrf(csrf -> csrf.disable())  // Desliga proteção contra
                 // ataques de formulário
                 // (não precisa em API REST)
+                .headers(headers -> headers
+                        .frameOptions(frame -> frame.disable()))
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(req -> {
                     req.requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll();
                     req.requestMatchers("/login", "/login/cadastrar").permitAll();
+                    req.requestMatchers("/h2-console/**").permitAll(); // Liberar acesso ao H2 Console
                     req.anyRequest().authenticated(); // Todo o resto precisa de pulseira
                 })
                 .build();

@@ -1,5 +1,6 @@
-package com.cep_service.cep_service.domain.usuario;
+package com.cep_service.cep_service.infra.security;
 
+import com.cep_service.cep_service.domain.usuario.UsuarioRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

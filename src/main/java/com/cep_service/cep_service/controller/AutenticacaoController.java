@@ -1,6 +1,6 @@
 package com.cep_service.cep_service.controller;
 
-import com.cep_service.cep_service.domain.usuario.AutenticacaoService;
+import com.cep_service.cep_service.infra.security.AutenticacaoService;
 import com.cep_service.cep_service.domain.usuario.Usuario;
 import com.cep_service.cep_service.domain.usuario.UsuarioRepository;
 import com.cep_service.cep_service.domain.usuario.dto.DadosAutenticacao;
