@@ -23,7 +23,7 @@ import java.net.URI;
 
 
 @RestController
-@RequestMapping("/login")
+@RequestMapping("/auth")
 public class AutenticacaoController {
 
 
@@ -75,8 +75,8 @@ public class AutenticacaoController {
         return ResponseEntity.created(uri).body(new DadosDetalhamentoDeUsuario(novoUsuario));
     }
 
-    @PostMapping
-    public ResponseEntity<?> autenticar(@RequestBody @Valid DadosAutenticacao dadosAutenticacao) {
+    @PostMapping("/login")
+    public ResponseEntity<DadosTokenJWT> autenticar(@RequestBody @Valid DadosAutenticacao dadosAutenticacao) {
 
         UsernamePasswordAuthenticationToken uPA = new UsernamePasswordAuthenticationToken(
                 dadosAutenticacao.usuario(),
