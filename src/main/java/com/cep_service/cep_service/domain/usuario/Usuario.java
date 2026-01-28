@@ -1,5 +1,6 @@
 package com.cep_service.cep_service.domain.usuario;
 
+import com.cep_service.cep_service.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,16 +27,20 @@ public class Usuario implements UserDetails {
     private String senha;
     private Instant dataCadastro = Instant.now();
 
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
+
     public Usuario(String usuario, String email, String senha) {
         this.usuario = usuario;
         this.email = email;
         this.senha = senha;
+        this.role = UserRole.ROLE_USUARIO;
     }
 
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_USUARIO"));
+        return List.of(new SimpleGrantedAuthority(this.role.name()));
     }
 
     @Override

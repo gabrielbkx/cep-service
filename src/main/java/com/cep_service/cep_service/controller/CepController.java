@@ -6,10 +6,10 @@ import com.cep_service.cep_service.domain.cep.dto.DadosSalvarCep;
 import com.cep_service.cep_service.domain.cep.CepService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
-
 import java.util.List;
 
 @CrossOrigin(origins = "*")
@@ -38,9 +38,10 @@ public class CepController {
         return ResponseEntity.ok(cepAtualizado);
     }
 
+    @PreAuthorize(value = "hasAuthority(ROLE_ADMIN)")// Apenas administradores podem deletar ceps
     @Transactional
     @DeleteMapping({"/{id}"})
-    public ResponseEntity<Object> deletarCep(@PathVariable Long id) {
+    public ResponseEntity<ResponseEntity> deletarCep(@PathVariable Long id) {
         cepService.deletar(id);
         return ResponseEntity.noContent().build();
     }

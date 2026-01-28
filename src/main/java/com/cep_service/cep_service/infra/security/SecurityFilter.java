@@ -41,7 +41,7 @@ public class SecurityFilter extends OncePerRequestFilter {
 
             var authentication = new UsernamePasswordAuthenticationToken(
                     usuario,
-                    null,
+                    usuario.getRole(),
                     usuario.getAuthorities());
 
             // O segurança "salva" o crachá no sistema da festa

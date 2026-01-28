@@ -24,7 +24,8 @@ public class TokenService {
         return JWT.create()
                 .withIssuer("cep-service") // Emissor do token
                 .withSubject(usuario.getUsuario()) // Dono do token
-                .withExpiresAt(expiracaoToken) // Tempo de expiração do token (1 hora)
+                .withClaim("role", usuario.getRole().toString())
+                .withExpiresAt(expiracaoToken) // Tempo de expiração do token (1 hora
                 .sign(algorithm);  // Assinatura do token
     }
 

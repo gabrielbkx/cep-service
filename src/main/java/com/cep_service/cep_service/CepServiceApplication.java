@@ -7,7 +7,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class CepServiceApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(CepServiceApplication.class, args);
+
+		SpringApplication.run(CepServiceApplication.class, args
+
+
+		);
 	}
 
 }
