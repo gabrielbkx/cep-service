@@ -38,7 +38,7 @@ public class CepController {
         return ResponseEntity.ok(cepAtualizado);
     }
 
-    @PreAuthorize(value = "hasAuthority(ROLE_ADMIN)")// Apenas administradores podem deletar ceps
+    @PreAuthorize(value = "hasAuthority('ROLE_ADMIN')")// Apenas administradores podem deletar ceps
     @Transactional
     @DeleteMapping({"/{id}"})
     public ResponseEntity<ResponseEntity> deletarCep(@PathVariable Long id) {

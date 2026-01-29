@@ -1,5 +1,6 @@
 package com.cep_service.cep_service.infra.security;
 
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.cep_service.cep_service.domain.usuario.UsuarioRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -7,10 +8,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
+import java.util.Collections;
 
 @Component
 public class SecurityFilter extends OncePerRequestFilter {
@@ -29,27 +32,29 @@ public class SecurityFilter extends OncePerRequestFilter {
         String authorizationHeader = request.getHeader("Authorization");
 
         if (authorizationHeader != null) {
-            // O split cria um array: ["Bearer", "eyJhb..."]
-            // Pegamos a posição 1, que é o token
             var token = authorizationHeader.split(" ")[1];
 
-            System.out.println("Token limpo: " + token);
-
+            // Validamos o token e pegamos o objeto completo
             var login = tokenService.validarToken(token);
 
-            var usuario = usuarioRepository.findByUsuario(login).orElseThrow();
+            // Extraímos os dados direto da "pulseira"
+            String nomeUsuario = login.getSubject();
+            String role = login.getClaim("role").asString();
 
+
+
+            // Transformamos a role em uma lista de autoridades
+            var authorities = Collections.singletonList(new SimpleGrantedAuthority(role));
+
+            // Criamos o objeto de autenticação SEM ir ao banco
             var authentication = new UsernamePasswordAuthenticationToken(
-                    usuario,
-                    usuario.getRole(),
-                    usuario.getAuthorities());
+                    nomeUsuario,
+                    null,
+                    authorities);
 
-            // O segurança "salva" o crachá no sistema da festa
             SecurityContextHolder.getContext().setAuthentication(authentication);
-
-
         }
-        // O segurança libera a passagem para o próximo passo
+
         filterChain.doFilter(request, response);
     }
 }
