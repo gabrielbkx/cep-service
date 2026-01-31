@@ -2,7 +2,7 @@ package com.cep_service.cep_service.config;
 
 import com.cep_service.cep_service.domain.usuario.Usuario;
 import com.cep_service.cep_service.domain.usuario.UsuarioRepository;
-import com.cep_service.cep_service.enums.UserRole;
+import com.cep_service.cep_service.domain.usuario.enums.UserRole;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;

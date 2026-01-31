@@ -1,9 +1,11 @@
-package com.cep_service.cep_service.exception.global;
+package com.cep_service.cep_service.infra.exceptions;
 
-import com.cep_service.cep_service.exception.global.dto.DadosErro;
-import com.cep_service.cep_service.exception.global.dto.DadosErroValidacao;
+import com.cep_service.cep_service.infra.exceptions.dto.DadosErro;
+import com.cep_service.cep_service.infra.exceptions.dto.DadosErroValidacao;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -43,5 +45,13 @@ public class TratarErrosGlobais {
                 .collect(Collectors.toList());
 
         return ResponseEntity.status(400).body(erros);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<DadosErro> tratarErro403(AccessDeniedException e) {
+
+        String mensagem = "Você não tem permissão para acessar este recurso.";
+        DadosErro dadosErro = new DadosErro(mensagem, HttpStatus.FORBIDDEN.value());
+        return ResponseEntity.status(dadosErro.status()).body(dadosErro);
     }
 }

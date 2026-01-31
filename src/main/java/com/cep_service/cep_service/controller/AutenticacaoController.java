@@ -7,7 +7,7 @@ import com.cep_service.cep_service.domain.usuario.dto.DadosAutenticacao;
 import com.cep_service.cep_service.domain.usuario.dto.DadosCadastro;
 import com.cep_service.cep_service.domain.usuario.dto.DadosDetalhamentoDeUsuario;
 import com.cep_service.cep_service.domain.usuario.dto.DadosTokenJWT;
-import com.cep_service.cep_service.exception.DadosJaExistenteException;
+import com.cep_service.cep_service.domain.cep.exceptions.DadosJaExistenteException;
 import com.cep_service.cep_service.infra.security.TokenService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
