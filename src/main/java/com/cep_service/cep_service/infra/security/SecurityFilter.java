@@ -1,17 +1,17 @@
 package com.cep_service.cep_service.infra.security;
 
-import com.auth0.jwt.interfaces.DecodedJWT;
-import com.cep_service.cep_service.domain.usuario.UsuarioRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 import java.io.IOException;
 import java.util.Collections;
 
@@ -22,12 +22,15 @@ public class SecurityFilter extends OncePerRequestFilter {
     TokenService tokenService;
 
     @Autowired
-    UsuarioRepository usuarioRepository;
+    @Qualifier("handlerExceptionResolver") // Importante: garante que pegamos o resolver certo
+    private HandlerExceptionResolver resolver;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
+
+        try{
 
         String authorizationHeader = request.getHeader("Authorization");
 
@@ -56,5 +59,7 @@ public class SecurityFilter extends OncePerRequestFilter {
         }
 
         filterChain.doFilter(request, response);
+    }catch (Exception e){
+            resolver.resolveException(request, response, null, e);}
     }
 }
