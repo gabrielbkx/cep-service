@@ -11,6 +11,7 @@ import com.cep_service.cep_service.domain.cep.exceptions.DadosJaExistenteExcepti
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -25,6 +26,8 @@ import static org.mockito.Mockito.*;
  - Invoca os métodos do controller diretamente (sem MockMvc) para verificar comportamento/fluxos.
  - Cada método cobre um cenário comentado.
 */
+
+@WebMvcTest(AutenticacaoController.class)
 public class AutenticacaoControllerTest {
 
     @Mock
