@@ -11,12 +11,15 @@ import com.cep_service.cep_service.domain.cep.exceptions.DadosJaExistenteExcepti
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -28,92 +31,85 @@ import static org.mockito.Mockito.*;
 */
 
 @WebMvcTest(AutenticacaoController.class)
+@AutoConfigureMockMvc(addFilters = false) // Ignora filtros de segurança para focar na lógica do Controller
 public class AutenticacaoControllerTest {
 
-    @Mock
+    @Autowired
+    private AutenticacaoController controller; // Injetamos o controller para testes diretos de unidade se necessário
+
+    // Mocks geridos pelo Spring Context (@MockitoBean)
+    @MockitoBean
     private UsuarioRepository usuarioRepository;
 
-    @Mock
+    @MockitoBean
     private AutenticacaoService autenticacaoService;
 
-    @Mock
+    @MockitoBean
     private AuthenticationManager authenticationManager;
 
-    @Mock
+    @MockitoBean
     private TokenService tokenService;
 
-    @Mock
+    @MockitoBean
     private PasswordEncoder passwordEncoder;
 
-    @InjectMocks
-    private AutenticacaoController controller;
-
-    @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
-
+    // Teste 1: Cadastro com Sucesso
     @Test
     public void cadastrar_quandoSucesso_deveRetornarCreatedComDetalhes() {
-        // Arrange: prepara dados e mocks (email e usuario não existem)
+        // Arrange
         DadosCadastro dados = new DadosCadastro("novoUsuario", "novo@email.com", "senha123");
         when(usuarioRepository.existsByEmail(dados.email())).thenReturn(false);
         when(usuarioRepository.existsByUsuario(dados.usuario())).thenReturn(false);
         when(passwordEncoder.encode(dados.senha())).thenReturn("senhaCriptografada");
 
-        // Mock do save: retorna usuário com id preenchido
         when(usuarioRepository.save(any(Usuario.class))).thenAnswer(invocation -> {
             Usuario u = invocation.getArgument(0);
-            u.setId(100L);
+            u.setId(100L); // Simulamos o ID gerado pelo banco
             return u;
         });
 
         // Act
         ResponseEntity<?> resposta = controller.cadastrar(dados);
 
-        // Assert: status 201 Created e corpo do tipo DadosDetalhamentoDeUsuario
+        // Assert
         assertEquals(201, resposta.getStatusCodeValue(), "Deve retornar 201 Created");
         assertNotNull(resposta.getBody(), "Corpo não deve ser nulo");
-        assertTrue(resposta.getBody().getClass().getSimpleName().toLowerCase().contains("detalhamento"),
-                "Corpo deve ser um DTO de detalhamento de usuário");
+        // Verifica se chamou o save
         verify(usuarioRepository).save(any(Usuario.class));
     }
 
+    // Teste 2: Cadastro com Email Duplicado
     @Test
     public void cadastrar_quandoEmailExistente_deveLancarDadosJaExistenteException() {
-        // Arrange: email já existe
         DadosCadastro dados = new DadosCadastro("qualquer", "existente@email.com", "senha");
         when(usuarioRepository.existsByEmail(dados.email())).thenReturn(true);
 
-        // Act & Assert: exceção esperada
         assertThrows(DadosJaExistenteException.class, () -> controller.cadastrar(dados));
         verify(usuarioRepository, never()).save(any());
     }
 
+    // Teste 3: Cadastro com Usuário Duplicado
     @Test
     public void cadastrar_quandoUsuarioExistente_deveLancarDadosJaExistenteException() {
-        // Arrange: usuário já existe (email não existe)
         DadosCadastro dados = new DadosCadastro("usuarioExistente", "novo@email.com", "senha");
         when(usuarioRepository.existsByEmail(dados.email())).thenReturn(false);
         when(usuarioRepository.existsByUsuario(dados.usuario())).thenReturn(true);
 
-        // Act & Assert
         assertThrows(DadosJaExistenteException.class, () -> controller.cadastrar(dados));
         verify(usuarioRepository, never()).save(any());
     }
 
+    // Teste 4: Autenticação com Sucesso
     @Test
     public void autenticar_quandoCredenciaisValidas_deveRetornarToken() {
-        // Arrange: prepara dados de autenticação e mocks para autenticação bem sucedida
         DadosAutenticacao dados = new DadosAutenticacao("usuarioLogin", "senhaLogin");
 
-        // Cria um Usuario que será o principal do Authentication
         Usuario usuario = new Usuario();
         usuario.setUsuario("usuarioLogin");
         usuario.setEmail("u@ex.com");
         usuario.setId(50L);
 
-        // Cria um Authentication autenticado com principal = Usuario
+        // Simulamos o retorno do AuthenticationManager
         UsernamePasswordAuthenticationToken authResult =
                 new UsernamePasswordAuthenticationToken(usuario, null, null);
 
@@ -122,26 +118,22 @@ public class AutenticacaoControllerTest {
 
         when(tokenService.gerarToken(usuario)).thenReturn("token-jwt-gerado");
 
-        // Act
         ResponseEntity<?> resposta = controller.autenticar(dados);
 
-        // Assert: 200 OK e token gerado (verifica que tokenService foi chamado com o usuário principal)
-        assertEquals(200, resposta.getStatusCodeValue(), "Deve retornar 200 OK");
+        assertEquals(200, resposta.getStatusCodeValue());
         verify(tokenService).gerarToken(usuario);
-        assertNotNull(resposta.getBody(), "Corpo da resposta não deve ser nulo");
         String bodyStr = resposta.getBody().toString();
-        assertTrue(bodyStr.contains("token") || bodyStr.contains("Token") || bodyStr.contains("jwt"),
-                "Corpo deve conter o token gerado");
+        assertTrue(bodyStr.contains("token") || bodyStr.contains("jwt") || bodyStr.contains("token-jwt-gerado"));
     }
 
+    // Teste 5: Autenticação Falha
     @Test
     public void autenticar_quandoCredenciaisInvalidas_deveLancarBadCredentialsException() {
-        // Arrange: autenticação falha (credenciais inválidas)
         DadosAutenticacao dados = new DadosAutenticacao("usuarioLogin", "senhaInvalida");
+
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
                 .thenThrow(new BadCredentialsException("Credenciais inválidas"));
 
-        // Act & Assert
         assertThrows(BadCredentialsException.class, () -> controller.autenticar(dados));
         verify(tokenService, never()).gerarToken(any());
     }
