@@ -1,12 +1,10 @@
-package com.cep_service.cep_service.service;
+package com.cep_service.cep_service.domain.cep;
 
-import com.cep_service.cep_service.domain.cep.Cep;
 import com.cep_service.cep_service.domain.cep.dto.DadosDetalharCep;
 import com.cep_service.cep_service.domain.cep.dto.DadosSalvarCep;
 import com.cep_service.cep_service.domain.cep.dto.DadosatualizarCep;
-import com.cep_service.cep_service.exception.CepExistenteException;
-import com.cep_service.cep_service.exception.CepNaoExistenteException;
-import com.cep_service.cep_service.repositpry.CepRepository;
+import com.cep_service.cep_service.domain.cep.exceptions.DadosJaExistenteException;
+import com.cep_service.cep_service.domain.cep.exceptions.CepNaoExistenteException;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +23,7 @@ public class CepService {
 
         // Verifica se o CEP já existe no sistema, caso exista lança uma exceção peresonalizada
         if (cepRepository.existsByNumeroCep(dados.numeroCep())) {
-            throw new CepExistenteException("O CEP informado já existe no sistema.");
+            throw new DadosJaExistenteException("O CEP informado já existe no sistema.");
         }
 
         Cep cep = new Cep(dados);

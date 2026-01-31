@@ -1,9 +1,10 @@
 package com.cep_service.cep_service.service;
 
 import com.cep_service.cep_service.domain.cep.Cep;
+import com.cep_service.cep_service.domain.cep.CepService;
 import com.cep_service.cep_service.domain.cep.dto.DadosDetalharCep;
-import com.cep_service.cep_service.exception.CepNaoExistenteException;
-import com.cep_service.cep_service.repositpry.CepRepository;
+import com.cep_service.cep_service.domain.cep.exceptions.CepNaoExistenteException;
+import com.cep_service.cep_service.domain.cep.CepRepository;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
