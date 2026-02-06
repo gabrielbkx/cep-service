@@ -2,6 +2,7 @@ package com.cep_service.cep_service.domain.usuario;
 
 import com.cep_service.cep_service.domain.usuario.enums.UserRole;
 import jakarta.persistence.*;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
