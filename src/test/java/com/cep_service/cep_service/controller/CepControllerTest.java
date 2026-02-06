@@ -2,6 +2,7 @@ package com.cep_service.cep_service.controller;
 
 
 import com.cep_service.cep_service.domain.cep.Cep;
+import com.cep_service.cep_service.domain.cep.CepController;
 import com.cep_service.cep_service.domain.cep.dto.DadosDetalharCep;
 import com.cep_service.cep_service.domain.cep.CepService;
 import com.cep_service.cep_service.domain.usuario.UsuarioRepository;
@@ -13,7 +14,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.servlet.HandlerExceptionResolver;
+
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;

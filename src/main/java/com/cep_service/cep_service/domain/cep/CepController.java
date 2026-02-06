@@ -1,9 +1,8 @@
-package com.cep_service.cep_service.controller;
+package com.cep_service.cep_service.domain.cep;
 
 import com.cep_service.cep_service.domain.cep.dto.DadosatualizarCep;
 import com.cep_service.cep_service.domain.cep.dto.DadosDetalharCep;
 import com.cep_service.cep_service.domain.cep.dto.DadosSalvarCep;
-import com.cep_service.cep_service.domain.cep.CepService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -38,14 +37,6 @@ public class CepController {
         return ResponseEntity.ok(cepAtualizado);
     }
 
-    @PreAuthorize(value = "hasAuthority('ROLE_ADMIN')")// Apenas administradores podem deletar ceps
-    @Transactional
-    @DeleteMapping({"/{id}"})
-    public ResponseEntity<ResponseEntity> deletarCep(@PathVariable Long id) {
-        cepService.deletar(id);
-        return ResponseEntity.noContent().build();
-    }
-
     @GetMapping("/numeroCep/{numeroCep}")
     public ResponseEntity<DadosDetalharCep> buscarPorCep(@PathVariable String numeroCep) {
         var cep = cepService.buscarPorCep(numeroCep);
@@ -63,4 +54,14 @@ public class CepController {
         var ceps = cepService.buscarPorCidade(cidade);
         return ResponseEntity.ok(ceps);
     }
+
+    // Admins abaixo
+    @PreAuthorize(value = "hasAuthority('ROLE_ADMIN')")// Apenas administradores podem deletar ceps
+    @Transactional
+    @DeleteMapping({"/{id}"})
+    public ResponseEntity<ResponseEntity> deletarCep(@PathVariable Long id) {
+        cepService.deletar(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }
