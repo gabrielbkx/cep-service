@@ -1,6 +1,6 @@
 package com.cep_service.cep_service.domain.cep;
 
-import com.cep_service.cep_service.csv.dto.DadosArquivo;
+
 import com.cep_service.cep_service.domain.cep.dto.DadosatualizarCep;
 import com.cep_service.cep_service.domain.cep.dto.DadosDetalharCep;
 import com.cep_service.cep_service.domain.cep.dto.DadosSalvarCep;
@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 import java.util.List;
 
@@ -64,14 +63,6 @@ public class CepController {
     public ResponseEntity<ResponseEntity> deletarCep(@PathVariable Long id) {
         cepService.deletar(id);
         return ResponseEntity.noContent().build();
-    }
-
-    @PreAuthorize(value = "hasAuthority('ROLE_ADMIN')")// Apenas administradores podem fazer upload de ceps
-    @PostMapping(value = "/import",consumes = {"Multipart/form-data"})
-    public ResponseEntity<DadosArquivo> uploadCeps(@RequestPart("arquivo") MultipartFile arquivo) {
-
-        cepService.validarCsv(arquivo);
-        return null;
     }
 
 }

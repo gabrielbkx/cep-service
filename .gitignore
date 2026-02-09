@@ -33,3 +33,6 @@ build/
 
 # Variáveis de ambiente
 .env
+
+
+.plan-importacaoExcelCeps.prompt.md

@@ -1,11 +1,14 @@
 package com.cep_service.cep_service.domain.cep;
 
 import com.cep_service.cep_service.csv.dto.exception.ArquivoVazioException;
+import com.cep_service.cep_service.csv.dto.exception.FormatoInvalidoException;
 import com.cep_service.cep_service.domain.cep.dto.DadosDetalharCep;
 import com.cep_service.cep_service.domain.cep.dto.DadosSalvarCep;
 import com.cep_service.cep_service.domain.cep.dto.DadosatualizarCep;
 import com.cep_service.cep_service.domain.cep.exceptions.DadosJaExistenteException;
 import com.cep_service.cep_service.domain.cep.exceptions.CepNaoExistenteException;
+import com.opencsv.bean.CsvToBean;
+import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.bean.HeaderColumnNameMappingStrategy;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
@@ -99,26 +102,5 @@ public class CepService {
     }
 
 
-    // Método para validar o arquivo CSV
-
-    public void validarCsv(MultipartFile arquivo) {
-
-        if (arquivo == null || arquivo.isEmpty()) {
-
-            throw new ArquivoVazioException("O arquivo CSV não pode ser vazio.");
-        }
-
-
-    }
-
-    // Validar formato csv
-        public void validarFormatoCsv(MultipartFile arquivo) {
-
-            String contentType = arquivo.getContentType();
-
-            if (contentType == null || !contentType.equals("text/csv")) {
-                throw new IllegalArgumentException("O arquivo deve ser do tipo CSV.");
-            }
-        }
 }
 
