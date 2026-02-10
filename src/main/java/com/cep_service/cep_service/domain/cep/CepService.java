@@ -1,33 +1,30 @@
 package com.cep_service.cep_service.domain.cep;
 
-import com.cep_service.cep_service.csv.dto.exception.ArquivoVazioException;
-import com.cep_service.cep_service.csv.dto.exception.FormatoInvalidoException;
+
 import com.cep_service.cep_service.domain.cep.dto.DadosDetalharCep;
 import com.cep_service.cep_service.domain.cep.dto.DadosSalvarCep;
 import com.cep_service.cep_service.domain.cep.dto.DadosatualizarCep;
 import com.cep_service.cep_service.domain.cep.exceptions.DadosJaExistenteException;
 import com.cep_service.cep_service.domain.cep.exceptions.CepNaoExistenteException;
-import com.opencsv.bean.CsvToBean;
-import com.opencsv.bean.CsvToBeanBuilder;
-import com.opencsv.bean.HeaderColumnNameMappingStrategy;
+import com.cep_service.cep_service.excel.ExcelProcessadorService;
+import com.cep_service.cep_service.excel.exception.ExcelProcessamentoException;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+
 
 @Service
 public class CepService {
 
     private final CepRepository cepRepository;
+    private final ExcelProcessadorService excelProcessadorService;
 
-    public CepService(CepRepository cepRepository) {
+
+    public CepService(CepRepository cepRepository, ExcelProcessadorService excelProcessadorService) {
         this.cepRepository = cepRepository;
+        this.excelProcessadorService = excelProcessadorService;
     }
 
     public DadosDetalharCep salvar(DadosSalvarCep dados) {
@@ -40,6 +37,34 @@ public class CepService {
         Cep cep = new Cep(dados);
         var cepSalvo = cepRepository.save(cep);
         return new DadosDetalharCep(cepSalvo);
+    }
+
+    public List<DadosDetalharCep> salvarLista(List<DadosSalvarCep> dadosList) {
+
+        // Valida se a lista não está vazia
+        if (dadosList == null || dadosList.isEmpty()) {
+            throw new IllegalArgumentException("A lista de CEPs não pode estar vazia");
+        }
+
+        // Verifica se algum dos CEPs já existe no sistema
+        for (DadosSalvarCep dados : dadosList) {
+            if (cepRepository.existsByNumeroCep(dados.numeroCep())) {
+                throw new DadosJaExistenteException("O CEP " + dados.numeroCep() + " já existe no sistema.");
+            }
+        }
+
+        // Converte a lista de DTOs para entidades
+        List<Cep> ceps = dadosList.stream()
+                .map(Cep::new)
+                .toList();
+
+        // Salva todos os CEPs usando saveAll
+        var cepsSalvos = cepRepository.saveAll(ceps);
+
+        // Converte as entidades salvas para DTOs de resposta
+        return cepsSalvos.stream()
+                .map(DadosDetalharCep::new)
+                .toList();
     }
 
     public DadosDetalharCep atualizar(@Valid DadosatualizarCep dados) {
@@ -99,6 +124,15 @@ public class CepService {
         }// caso esteja vazia lança uma exceção
 
         return ceps.stream().map(DadosDetalharCep::new).toList();
+    }
+
+    public byte [] exportar(){
+
+        try {
+           return excelProcessadorService.exportarCepsViaExcell();
+        } catch (IOException e) {
+            throw new ExcelProcessamentoException(e.getMessage());
+        }
     }
 
 

@@ -5,6 +5,7 @@ import com.cep_service.cep_service.domain.cep.dto.DadosatualizarCep;
 import com.cep_service.cep_service.domain.cep.dto.DadosDetalharCep;
 import com.cep_service.cep_service.domain.cep.dto.DadosSalvarCep;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +30,13 @@ public class CepController {
         var cep = cepService.salvar(dados);
         var uri = uriBuilder.path("/cep/{id}").buildAndExpand(cep.id()).toUri();
         return ResponseEntity.created(uri).body(cep);
+    }
+
+    @PostMapping("/lista")
+    @Transactional
+    public ResponseEntity<List<DadosDetalharCep>> salvarListaCeps(@RequestBody @Valid List<DadosSalvarCep> dadosList) {
+        var cepsSalvos = cepService.salvarLista(dadosList);
+        return ResponseEntity.ok(cepsSalvos);
     }
 
     @Transactional
@@ -56,6 +64,15 @@ public class CepController {
         return ResponseEntity.ok(ceps);
     }
 
+    // Exportar planilha de todos os ceps via Excel
+    @GetMapping("/exportarCSV")
+    public ResponseEntity<byte []> exportarCepsViaExcel(){
+        var relatório = cepService.exportar();
+        HttpHeaders header = new HttpHeaders();
+        header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=ceps.xlsx");
+        return ResponseEntity.ok().headers(header).build();
+    }
+
     // Admins abaixo
     @PreAuthorize(value = "hasAuthority('ROLE_ADMIN')")// Apenas administradores podem deletar ceps
     @Transactional
@@ -64,5 +81,6 @@ public class CepController {
         cepService.deletar(id);
         return ResponseEntity.noContent().build();
     }
+
 
 }
