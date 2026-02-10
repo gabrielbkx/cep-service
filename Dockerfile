@@ -13,7 +13,7 @@ RUN mvn clean package -DskipTests
 FROM eclipse-temurin:21-jdk
 WORKDIR /app
 
-# Copia odo JAR
+# Copia do JAR
 COPY --from=builder /app/target/*.jar app.jar
 
 # porta
