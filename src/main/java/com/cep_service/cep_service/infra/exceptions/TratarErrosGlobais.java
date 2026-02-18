@@ -1,5 +1,6 @@
 package com.cep_service.cep_service.infra.exceptions;
 
+import com.cep_service.cep_service.excel.exception.ExcelProcessamentoException;
 import com.cep_service.cep_service.infra.exceptions.dto.DadosErro;
 import com.cep_service.cep_service.infra.exceptions.dto.DadosErroValidacao;
 import com.cep_service.cep_service.infra.security.exceptions.TokenInvalidoException;
@@ -60,5 +61,13 @@ public class TratarErrosGlobais {
     public ResponseEntity<DadosErro> tratarErroTokenInvalido(TokenInvalidoException ex) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED) // 401
                 .body(new DadosErro("Token inválido ou expirado", HttpStatus.UNAUTHORIZED.value()));
+    }
+
+
+    //excel handlers
+    @ExceptionHandler(ExcelProcessamentoException.class)
+    public ResponseEntity tratarErroDeProcessamentoExcel(ExcelProcessamentoException ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao gerar a planilha Excel: "
+                + ex.getMessage());
     }
 }
