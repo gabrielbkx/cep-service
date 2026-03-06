@@ -6,10 +6,12 @@ import com.cep_service.cep_service.domain.cep.dto.DadosSalvarCep;
 import com.cep_service.cep_service.domain.cep.dto.DadosatualizarCep;
 import com.cep_service.cep_service.domain.cep.exceptions.DadosJaExistenteException;
 import com.cep_service.cep_service.domain.cep.exceptions.CepNaoExistenteException;
+import com.cep_service.cep_service.domain.cep.mapper.CepMapper;
 import com.cep_service.cep_service.excel.ExcelProcessadorService;
 import com.cep_service.cep_service.excel.exception.ExcelProcessamentoException;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.List;
@@ -20,13 +22,16 @@ public class CepService {
 
     private final CepRepository cepRepository;
     private final ExcelProcessadorService excelProcessadorService;
+    private final CepMapper mapper;
 
 
-    public CepService(CepRepository cepRepository, ExcelProcessadorService excelProcessadorService) {
+    public CepService(CepRepository cepRepository, ExcelProcessadorService excelProcessadorService, CepMapper mapper) {
         this.cepRepository = cepRepository;
         this.excelProcessadorService = excelProcessadorService;
+        this.mapper = mapper;
     }
 
+    @Transactional
     public DadosDetalharCep salvar(DadosSalvarCep dados) {
 
         // Verifica se o CEP já existe no sistema, caso exista lança uma exceção peresonalizada
@@ -34,11 +39,10 @@ public class CepService {
             throw new DadosJaExistenteException("O CEP informado já existe no sistema.");
         }
 
-        Cep cep = new Cep(dados);
-        var cepSalvo = cepRepository.save(cep);
-        return new DadosDetalharCep(cepSalvo);
+        return mapper.paraDto(cepRepository.save(mapper.paraEntidade(dados)));
     }
 
+    @Transactional
     public List<DadosDetalharCep> salvarLista(List<DadosSalvarCep> dadosList) {
 
         // Valida se a lista não está vazia
@@ -67,32 +71,24 @@ public class CepService {
                 .toList();
     }
 
-    public DadosDetalharCep atualizar(@Valid DadosatualizarCep dados) {
+    @Transactional
+    public DadosDetalharCep atualizar(@Valid DadosatualizarCep dados, Long cepId) {
 
-            boolean cep = cepRepository.existsById(dados.id());
+            boolean cep = cepRepository.existsById(cepId);
 
             if (cep){
-                Cep CepParaAtualizar = cepRepository.getReferenceById(dados.id());
-                CepParaAtualizar.setNumeroCep(dados.numeroCep());
-                CepParaAtualizar.setLogradouro(dados.logradouro());
-                CepParaAtualizar.setCidade(dados.cidade());
-                return new DadosDetalharCep(CepParaAtualizar);
+                Cep cepParaAtualizar = cepRepository.getReferenceById(cepId);
+
+                mapper.atualizarCep(dados, cepParaAtualizar);
+                return mapper.paraDto(cepRepository.save(cepParaAtualizar));
+
             } else {
                 throw new CepNaoExistenteException("O CEP informado não existe no sistema.");
             }
     }
 
-    public void deletar(Long id) {
 
-        if (cepRepository.existsById(id)) {
-
-            cepRepository.deleteById(id);
-
-        } else {
-            throw new CepNaoExistenteException("O CEP informado não existe no sistema.");
-        }
-    }
-
+    @Transactional(readOnly = true)
     public DadosDetalharCep buscarPorCep(String numeroCep) {
 
         //se o cep existir ele vem no retorno, caso nao exista lança minha exceção
@@ -102,6 +98,7 @@ public class CepService {
     }
 
 
+    @Transactional(readOnly = true)
     public List<DadosDetalharCep> buscarPorLogradouro(String logradouro) {
 
         // busca uma lista de ceps pelo logradouro
@@ -116,6 +113,7 @@ public class CepService {
         return ceps.stream().map(DadosDetalharCep::new).toList();
     }
 
+    @Transactional(readOnly = true)
     public List<DadosDetalharCep> buscarPorCidade(String cidade) {
         var ceps = cepRepository.findByCidade(cidade);       // busca uma lista de ceps pelo logradouro
 
@@ -135,6 +133,18 @@ public class CepService {
         }
     }
 
+
+    @Transactional
+    public void deletar(Long id) {
+
+        if (cepRepository.existsById(id)) {
+
+            cepRepository.deleteById(id);
+
+        } else {
+            throw new CepNaoExistenteException("O CEP informado não existe no sistema.");
+        }
+    }
 
 }
 

@@ -18,8 +18,10 @@ public class Cep {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(name = "numero_cep")
     private String numeroCep;
+
     private String logradouro;
     private String cidade;
 
