@@ -21,18 +21,6 @@
           - cep-network
         restart: always # Se o servidor reiniciar, o container também reinicia
 
-      # Configuração do Keycloak
-      keycloak:
-        image: quay.io/keycloak/keycloak:latest
-        container_name: keycloak_auth
-        command: start-dev # Inicia o Keycloak em modo de desenvolvimento
-        environment:
-          - KEYCLOAK_ADMIN=admin
-          - KEYCLOAK_ADMIN_PASSWORD=admin
-        ports:
-          - "8081:8080"
-
-
 
     volumes:
       postgres_data:

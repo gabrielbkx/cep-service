@@ -23,21 +23,20 @@ public class Usuario implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String usuario;
+    private String username;
     private String email;
-    private String senha;
+    private String password;
     private Instant dataCadastro = Instant.now();
 
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-    public Usuario(String usuario, String email, String senha) {
-        this.usuario = usuario;
+    public Usuario(String username, String email, String password) {
+        this.username = username;
         this.email = email;
-        this.senha = senha;
+        this.password = password;
         this.role = UserRole.ROLE_USUARIO;
     }
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -46,12 +45,12 @@ public class Usuario implements UserDetails {
 
     @Override
     public String getPassword() {
-        return this.senha;
+        return this.password;
     }
 
     @Override
     public String getUsername() {
-        return this.usuario;
+        return this.username;
     }
 
     @Override
@@ -72,5 +71,18 @@ public class Usuario implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    // Metodos de compatibilidade para codigo legado
+    public String getUsuario() {
+        return this.username;
+    }
+
+    public String getSenha() {
+        return this.password;
+    }
+
+    public void setSenha(String senha) {
+        this.password = senha;
     }
 }

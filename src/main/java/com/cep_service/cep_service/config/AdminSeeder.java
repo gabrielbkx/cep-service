@@ -23,14 +23,14 @@ public class AdminSeeder implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        boolean usuarioExiste = usuarioRepository.existsByUsuario("admin");
+        boolean usuarioExiste = usuarioRepository.existsByUsername("admin");
 
         if (usuarioExiste) {
             return;
         }
 
         var usuarioAdmin = new Usuario("admin", "testadoradmin@gmail.com", "admin");
-        usuarioAdmin.setSenha(passwordEncoder.encode(usuarioAdmin.getSenha()));
+        usuarioAdmin.setPassword(passwordEncoder.encode(usuarioAdmin.getSenha()));
         usuarioAdmin.setRole(UserRole.ROLE_ADMIN);
         usuarioRepository.save(usuarioAdmin);
     }
