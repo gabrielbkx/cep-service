@@ -31,8 +31,7 @@ public class SecurityConfigurations {
 
 
             return http.csrf(csrf -> csrf.disable())  // Desliga proteção contra
-                    // ataques de formulário
-                    // (não precisa em API REST)
+
                     .headers(headers -> headers
                             .frameOptions(frame -> frame.disable()))
                     .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

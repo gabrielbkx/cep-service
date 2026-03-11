@@ -58,14 +58,14 @@ public class UsuarioRepositoryTest {
         usuarioRepository.save(usuarioA);
 
         // Act & Assert: método de existência retorna true
-        assertTrue(usuarioRepository.existsByUsuario("user_a"), "existsByUsuario deve retornar true para usuário persistido");
+        assertTrue(usuarioRepository.existsByUsername("user_a"), "existsByUsuario deve retornar true para usuário persistido");
     }
 
     @Test
     @DisplayName("existsByUsuario -> false quando usuário não existe")
     public void existsByUsuario_deveRetornarFalseQuandoNaoExistir() {
         // Sem persistência: deve ser false
-        assertFalse(usuarioRepository.existsByUsuario("nao_existe"), "existsByUsuario deve retornar false para usuário inexistente");
+        assertFalse(usuarioRepository.existsByUsername("nao_existe"), "existsByUsuario deve retornar false para usuário inexistente");
     }
 
     @Test
@@ -87,7 +87,7 @@ public class UsuarioRepositoryTest {
     public void findByUsuario_deveRetornarUsuarioQuandoExistir() {
         // Persiste e recupera
         usuarioRepository.save(usuarioA);
-        Optional<Usuario> encontrado = usuarioRepository.findByUsuario("user_a");
+        Optional<Usuario> encontrado = usuarioRepository.findByUsername("user_a");
 
         assertTrue(encontrado.isPresent(), "findByUsuario deve retornar Optional presente para usuário existente");
         assertEquals("user_a@example.com", encontrado.get().getEmail(), "Email do usuário encontrado deve corresponder");
@@ -96,7 +96,7 @@ public class UsuarioRepositoryTest {
     @Test
     @DisplayName("findByUsuario -> retorna Optional vazio quando não existe")
     public void findByUsuario_deveRetornarVazioQuandoNaoExistir() {
-        Optional<Usuario> encontrado = usuarioRepository.findByUsuario("inexistente");
+        Optional<Usuario> encontrado = usuarioRepository.findByUsername("inexistente");
         assertTrue(encontrado.isEmpty(), "findByUsuario deve retornar Optional vazio para usuário inexistente");
     }
 
@@ -107,7 +107,7 @@ public class UsuarioRepositoryTest {
         usuarioRepository.save(usuarioA);
 
         // Busca usando usuario (primeiro parâmetro)
-        Optional<Usuario> resultado = usuarioRepository.findByUsuarioOrEmail("user_a", "qualquer@dominio.com");
+        Optional<Usuario> resultado = usuarioRepository.findByUsernameOrEmail("user_a", "qualquer@dominio.com");
 
         assertTrue(resultado.isPresent(), "findByUsuarioOrEmail deve encontrar quando usuario corresponder");
         assertEquals("user_a", resultado.get().getUsuario(), "usuario retornado deve ser o esperado");
@@ -120,7 +120,7 @@ public class UsuarioRepositoryTest {
         usuarioRepository.save(usuarioB);
 
         // Busca usando email (segundo parâmetro)
-        Optional<Usuario> resultado = usuarioRepository.findByUsuarioOrEmail("nao_existe", "user_b@example.com");
+        Optional<Usuario> resultado = usuarioRepository.findByUsernameOrEmail("nao_existe", "user_b@example.com");
 
         assertTrue(resultado.isPresent(), "findByUsuarioOrEmail deve encontrar quando email corresponder");
         assertEquals("user_b@example.com", resultado.get().getEmail(), "email retornado deve ser o esperado");
@@ -133,7 +133,7 @@ public class UsuarioRepositoryTest {
         usuarioRepository.save(usuarioA);
 
         // Busca com valores que não batem
-        Optional<Usuario> resultado = usuarioRepository.findByUsuarioOrEmail("outro", "outro@dominio.com");
+        Optional<Usuario> resultado = usuarioRepository.findByUsernameOrEmail("outro", "outro@dominio.com");
 
         assertTrue(resultado.isEmpty(), "findByUsuarioOrEmail deve retornar vazio quando nenhum campo corresponder");
     }

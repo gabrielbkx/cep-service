@@ -59,7 +59,7 @@ public class AutenticacaoControllerTest {
         // Arrange
         DadosCadastro dados = new DadosCadastro("novoUsuario", "novo@email.com", "senha123");
         when(usuarioRepository.existsByEmail(dados.email())).thenReturn(false);
-        when(usuarioRepository.existsByUsuario(dados.usuario())).thenReturn(false);
+        when(usuarioRepository.existsByUsername(dados.usuario())).thenReturn(false);
         when(passwordEncoder.encode(dados.senha())).thenReturn("senhaCriptografada");
 
         when(usuarioRepository.save(any(Usuario.class))).thenAnswer(invocation -> {
@@ -93,7 +93,7 @@ public class AutenticacaoControllerTest {
     public void cadastrar_quandoUsuarioExistente_deveLancarDadosJaExistenteException() {
         DadosCadastro dados = new DadosCadastro("usuarioExistente", "novo@email.com", "senha");
         when(usuarioRepository.existsByEmail(dados.email())).thenReturn(false);
-        when(usuarioRepository.existsByUsuario(dados.usuario())).thenReturn(true);
+        when(usuarioRepository.existsByUsername(dados.usuario())).thenReturn(true);
 
         assertThrows(DadosJaExistenteException.class, () -> controller.cadastrar(dados));
         verify(usuarioRepository, never()).save(any());
@@ -105,7 +105,7 @@ public class AutenticacaoControllerTest {
         DadosAutenticacao dados = new DadosAutenticacao("usuarioLogin", "senhaLogin");
 
         Usuario usuario = new Usuario();
-        usuario.setUsuario("usuarioLogin");
+        usuario.setUsername("usuarioLogin");
         usuario.setEmail("u@ex.com");
         usuario.setId(50L);
 

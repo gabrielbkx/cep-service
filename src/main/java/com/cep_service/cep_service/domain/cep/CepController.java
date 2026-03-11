@@ -41,8 +41,8 @@ public class CepController {
 
     @Transactional
     @PutMapping
-    public ResponseEntity<DadosDetalharCep> atualizar(@RequestBody @Valid DadosatualizarCep dados) {
-        var cepAtualizado = cepService.atualizar(dados);
+    public ResponseEntity<DadosDetalharCep> atualizar(@RequestBody @Valid DadosatualizarCep dados, @PathVariable Long cepId) {
+        var cepAtualizado = cepService.atualizar(dados, cepId);
         return ResponseEntity.ok(cepAtualizado);
     }
 

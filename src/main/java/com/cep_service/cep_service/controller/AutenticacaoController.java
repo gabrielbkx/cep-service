@@ -54,7 +54,7 @@ public class AutenticacaoController {
       }
 
         // Verifica se o usuario ja existe pelo nome de usuario já existe
-        if (usuarioRepository.existsByUsuario(dadosCadastro.usuario())){
+        if (usuarioRepository.existsByUsername(dadosCadastro.usuario())){
             throw new DadosJaExistenteException("Nome de usuário já cadastrado!");
         }
 

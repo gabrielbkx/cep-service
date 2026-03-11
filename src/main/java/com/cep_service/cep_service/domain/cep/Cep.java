@@ -8,28 +8,29 @@ import lombok.*;
 @Entity
 @Table(name = "ceps")
 @EqualsAndHashCode(of = "id")
-@AllArgsConstructor
-@NoArgsConstructor
 @Setter
 @Getter
+@AllArgsConstructor
 public class Cep {
 
-    // vou deixar o jpa criar as colunas conforme escrito nos atributos
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(name = "numero_cep")
     private String numeroCep;
+
     private String logradouro;
     private String cidade;
 
+    public Cep() {
+    }
 
     public Cep(DadosSalvarCep dados) {
         this.numeroCep = dados.numeroCep();
         this.logradouro = dados.logradouro();
         this.cidade = dados.cidade();
     }
-
 
     public Cep(DadosDetalharCep cep) {
         this.id = cep.id();
