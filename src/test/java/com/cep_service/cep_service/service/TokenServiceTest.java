@@ -36,7 +36,7 @@ public class TokenServiceTest {
     public void gerarToken_usuarioValido_deveGerarTokenComClaimsCorretos() {
         // 1. Arrange: Preparamos um usuário fictício
         Usuario usuario = new Usuario();
-        usuario.setUsuario("joao.silva");
+        usuario.setUsername("joao.silva");
 
         // --- AQUI ESTÁ A LINHA NOVA ---
         // Definimos a Role para evitar o NullPointerException
